@@ -1,0 +1,8 @@
+{
+  "luci-app-hostupdater": {
+    "description": "Host Updater - Manage multiple hosts subscription sources",
+    "readonly": true,
+    "name": "Host Updater",
+    "url": "/cgi-bin/luci/admin/services/hostupdater"
+  }
+}

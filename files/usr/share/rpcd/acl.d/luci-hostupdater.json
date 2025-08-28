@@ -1,0 +1,31 @@
+{
+  "hostupdater": {
+    "description": "Grant access to Host Updater",
+    "read": {
+      "ubus": {
+        "service": ["list", "get"],
+        "uci": ["get"]
+      },
+      "file": {
+        "/etc/config/hostupdater": {},
+        "/etc/hostupdater/sources.conf": {},
+        "/etc/hosts": {},
+        "/var/log/hostupdater.log": {}
+      }
+    },
+    "write": {
+      "ubus": {
+        "service": ["reload"],
+        "uci": ["set", "add", "delete", "reorder", "rename"]
+      },
+      "file": {
+        "/etc/config/hostupdater": {},
+        "/etc/hostupdater/sources.conf": {},
+        "/etc/hosts": {}
+      },
+      "exec": {
+        "/usr/bin/hostupdater": {}
+      }
+    }
+  }
+}

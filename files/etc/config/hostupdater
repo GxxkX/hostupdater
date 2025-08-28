@@ -1,0 +1,5 @@
+config hostupdater 'main'
+	option enabled '0'
+	option interval '1'
+	option auto_backup '1'
+	option log_level 'info'

@@ -1,0 +1,148 @@
+<%#
+ Copyright (c) 2025 Gxxkx
+ Licensed to the public under the MIT license.
+-%>
+
+<%+header%>
+
+<h2 name="content"><%:Host Updater%></h2>
+
+<div id="hostupdater-container" class="hu-wrap">
+	<div class="cbi-section hu-card">
+		<h3><%:基本设置%></h3>
+		<div class="cbi-section-descr"><%:管理多个hosts订阅源，支持定时抓取和手动抓取%></div>
+		<div class="hu-grid2">
+			<div class="cbi-value">
+				<label class="cbi-value-title"><%:启用服务%></label>
+				<div class="cbi-value-field">
+					<input type="checkbox" id="enabled" />
+					<label for="enabled"><%:启用自动更新服务%></label>
+				</div>
+			</div>
+			<div class="cbi-value">
+				<label class="cbi-value-title"><%:更新间隔%></label>
+				<div class="cbi-value-field">
+					<select id="interval">
+						<option value="1" selected><%:1小时%></option>
+						<option value="2"><%:2小时%></option>
+						<option value="3"><%:3小时%></option>
+						<option value="6"><%:6小时%></option>
+						<option value="12"><%:12小时%></option>
+						<option value="24"><%:24小时%></option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="hu-actions">
+			<button class="btn cbi-button-save" onclick="hostupdater.saveConfig()"><%:保存配置%></button>
+		</div>
+	</div>
+
+	<div class="cbi-section hu-card">
+		<h3><%:订阅源管理%></h3>
+		<div class="cbi-section-descr"><%:添加、删除、启用、停用订阅源，支持单源手动更新%></div>
+		<div class="hu-grid2 hu-gap">
+			<div class="cbi-value">
+				<label class="cbi-value-title"><%:订阅源名称%></label>
+				<div class="cbi-value-field"><input type="text" id="new-source-name" placeholder="<%:名称%>" /></div>
+			</div>
+			<div class="cbi-value">
+				<label class="cbi-value-title"><%:订阅源URL%></label>
+				<div class="cbi-value-field"><input type="text" id="new-source-url" placeholder="<%:URL%>" /></div>
+			</div>
+		</div>
+		<div class="hu-actions">
+			<button class="btn cbi-button-add" onclick="hostupdater.addSource()"><%:添加%></button>
+		</div>
+		<div class="hu-table-wrap">
+			<div id="sources-list"><%:正在加载...%></div>
+		</div>
+	</div>
+
+	<div class="cbi-section hu-card">
+		<h3><%:批量操作%></h3>
+		<div class="hu-actions">
+			<button class="btn cbi-button-apply" onclick="hostupdater.updateAll()"><%:执行全部更新%></button>
+			<button class="btn cbi-button-remove" onclick="hostupdater.performRestore()"><%:还原hosts%></button>
+			<!-- <button class="btn cbi-button-reload" onclick="hostupdater.updateStatus()"><%:刷新状态%></button> -->
+		</div>
+	</div>
+
+	<div class="cbi-section hu-card">
+		<h3><%:当前 /etc/hosts 内容%></h3>
+		<div class="hu-row">
+			<button class="btn cbi-button-reload" onclick="hostupdater.loadHosts()"><%:刷新%></button>
+		</div>
+		<pre id="hosts-display" class="log-content" style="min-height:220px"><%:点击“刷新”按钮加载当前 /etc/hosts%></pre>
+	</div>
+
+	<div class="cbi-section hu-card">
+		<h3><%:日志查看%></h3>
+		<div class="hu-row">
+			<select id="log-lines">
+				<option value="50">50</option>
+				<option value="100" selected>100</option>
+				<option value="200">200</option>
+				<option value="500">500</option>
+			</select>
+			<button class="btn cbi-button-reload" onclick="hostupdater.viewLog()"><%:查看日志%></button>
+			<button class="btn cbi-button-remove" onclick="hostupdater.clearLog()"><%:清空日志%></button>
+		</div>
+		<pre id="log-display" class="log-content"><%:点击“查看日志”按钮显示日志%></pre>
+	</div>
+</div>
+
+<script type="text/javascript">
+'use strict';
+(function(){
+	function esc(s){return (s||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+	var hostupdater = {
+		init(){ this.loadConfig(); this.loadSources(); this.loadHosts(); },
+		msg(t,m,ok){ var c=document.getElementById('hostupdater-container'); var el=document.createElement('div'); el.className='alert '+(ok?'alert-success':'alert-danger'); el.innerHTML='<strong>'+esc(t)+'</strong>'+(m?('<br>'+esc(m)):''); c.insertAdjacentElement('afterbegin',el); setTimeout(()=>{el.remove();},2500); },
+		loadConfig(){ fetch('/cgi-bin/luci/admin/services/hostupdater/config').then(r=>r.json()).then(d=>{ document.getElementById('enabled').checked=!!d.enabled; if(d.interval) document.getElementById('interval').value=d.interval; }).catch(()=>{}); },
+		saveConfig(){ const p={enabled:document.getElementById('enabled').checked, interval:document.getElementById('interval').value}; fetch('/cgi-bin/luci/admin/services/hostupdater/config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}).then(r=>r.json()).then(d=>{ this.msg('保存配置',d.success?'成功':'失败',d.success); }).catch(e=>this.msg('保存配置失败',e.message,false)); },
+		loadSources(){ fetch('/cgi-bin/luci/admin/services/hostupdater/sources').then(r=>r.json()).then(d=>this.renderSources(d||[])).catch(()=>this.renderSources([])); },
+		renderSources(list){ const wrap=document.getElementById('sources-list'); if(!list.length){ wrap.innerHTML='<p>暂无订阅源</p>'; return;} let html='<table class="table hu-table"><thead><tr><th>名称</th><th>URL</th><th>状态</th><th class="hu-ops">操作</th></tr></thead><tbody>'; list.forEach(s=>{ html+= '<tr>'+'<td>'+esc(s.name)+'</td>'+'<td class="hu-url">'+esc(s.url)+'</td>'+'<td>'+(s.enabled?'<span class="status-enabled">启用</span>':'<span class="status-disabled">禁用</span>')+'</td>'+'<td class="hu-ops">'+'<button class="btn btn-mini" onclick="hostupdater.toggle(\''+encodeURIComponent(s.name)+'\')">'+(s.enabled?'禁用':'启用')+'</button> '+'<button class="btn btn-mini" onclick="hostupdater.updateOne(\''+encodeURIComponent(s.name)+'\')">更新</button> '+'<button class="btn btn-mini btn-danger" onclick="hostupdater.remove(\''+encodeURIComponent(s.name)+'\')">删除</button>'+'</td>'+'</tr>'; }); html+='</tbody></table>'; wrap.innerHTML=html; },
+		addSource(){ const name=document.getElementById('new-source-name').value.trim(); const url=document.getElementById('new-source-url').value.trim(); if(!name||!url) return this.msg('添加失败','请填写名称和URL',false); const p={name,url,enabled:true}; fetch('/cgi-bin/luci/admin/services/hostupdater/sources',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)}).then(r=>r.json()).then(d=>{ this.msg('添加订阅源',d.success?'成功':'失败',d.success); if(d.success){ this.loadSources(); document.getElementById('new-source-name').value=''; document.getElementById('new-source-url').value=''; }}).catch(e=>this.msg('添加失败',e.message,false)); },
+		toggle(nameEnc){ const name=decodeURIComponent(nameEnc); const form=new URLSearchParams(); form.set('name',name); fetch('/cgi-bin/luci/admin/services/hostupdater/source/toggle',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:form.toString()}).then(r=>r.json()).then(d=>{ this.msg('切换状态',d.success?'成功':'失败',d.success); if(d.success) this.loadSources(); }).catch(e=>this.msg('切换失败',e.message,false)); },
+		updateOne(nameEnc){ const name=decodeURIComponent(nameEnc); fetch('/cgi-bin/luci/admin/services/hostupdater/source/update?name='+encodeURIComponent(name)).then(r=>r.text()).then(()=>{ this.msg('单源更新','完成',true); this.updateStatus(); }).catch(e=>this.msg('单源更新失败',e.message,false)); },
+		remove(nameEnc){ const name=decodeURIComponent(nameEnc); if(!confirm('确认删除订阅源: '+name+' ?')) return; const form=new URLSearchParams(); form.set('name',name); fetch('/cgi-bin/luci/admin/services/hostupdater/source/delete',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:form.toString()}).then(r=>r.json()).then(d=>{ this.msg('删除订阅源',d.success?'成功':'失败',d.success); if(d.success) this.loadSources(); }).catch(e=>this.msg('删除失败',e.message,false)); },
+		updateAll(){ fetch('/cgi-bin/luci/admin/services/hostupdater/update').then(r=>r.text()).then(()=>{ this.msg('更新全部','完成',true); this.updateStatus(); }).catch(e=>this.msg('更新失败',e.message,false)); },
+		performRestore(){ if(!confirm('确认还原 /etc/hosts 到原始备份吗？')) return; fetch('/cgi-bin/luci/admin/services/hostupdater/restore').then(r=>r.text()).then(()=>{ this.msg('还原完成','',true); this.updateStatus(); }).catch(e=>this.msg('还原失败',e.message,false)); },
+		updateStatus(){ /* 兼容留空 */ },
+		loadHosts(){ fetch('/cgi-bin/luci/admin/services/hostupdater/hosts').then(r=>r.text()).then(t=>{ document.getElementById('hosts-display').textContent=t; }).catch(e=>this.msg('加载hosts失败',e.message,false)); },
+		viewLog(){ const n=document.getElementById('log-lines').value; fetch('/cgi-bin/luci/admin/services/hostupdater/log?lines='+encodeURIComponent(n)).then(r=>r.text()).then(t=>{ document.getElementById('log-display').textContent=t; }).catch(e=>this.msg('查看日志失败',e.message,false)); },
+		clearLog(){ if(!confirm('确认清空日志?')) return; const form=new URLSearchParams(); form.set('op','delete'); fetch('/cgi-bin/luci/admin/services/hostupdater/log',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:form.toString()}).then(r=>r.json()).then(d=>{ this.msg('清空日志',d.success?'成功':'失败',d.success); if(d.success) document.getElementById('log-display').textContent=''; }).catch(e=>this.msg('清空日志失败',e.message,false)); }
+	};
+	window.hostupdater=hostupdater;
+	document.addEventListener('DOMContentLoaded',()=>hostupdater.init());
+})();
+</script>
+
+<style>
+.hu-wrap { display:flex; flex-direction:column; gap:16px; }
+.hu-card { background:#fff; border:1px solid #ddd; border-radius:6px; padding:12px 14px; }
+.hu-grid2 { display:flex; flex-direction: column; gap:12px 18px; align-items:center; }
+.hu-gap { margin-top:8px; }
+.hu-actions { margin-top:10px; display:flex; gap:8px; justify-content: center;}
+.hu-table-wrap { margin-top:10px; overflow:auto; }
+.hu-table { text-align: center; width:100%; border-collapse:collapse; }
+.hu-table th, .hu-table td { padding:8px 10px; border-bottom:1px solid #e6e6e6; vertical-align:middle; }
+.hu-table thead th { background:#f5f7fa; font-weight:600; color:#333; }
+.hu-ops { white-space:nowrap; text-align:right; }
+.hu-url { max-width:520px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.hu-row { display:flex; align-items:center; gap:10px;justify-content: flex-end; }
+.hu-status { background:#f9fafb; border:1px solid #e5e7eb; border-radius:6px; padding:10px; }
+.hu-status-list { list-style:none; padding:0; margin:0; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:6px 12px; }
+.status-enabled { color:#15803d; font-weight:600; }
+.status-disabled { color:#b91c1c; font-weight:600; }
+.log-content { margin:10px; background:#0b1020; color:#e5e7eb; border:1px solid #111827; border-radius:6px; padding:12px; min-height:140px; max-height:420px; overflow:auto; }
+.btn-mini { padding:2px 6px; font-size:11px; margin-right:6px; }
+.btn-danger { background:#dc3545; border:#dc3545; color:#fff; }
+.alert { padding:10px; margin:10px 0; border-radius:4px; }
+.alert-success { background:#d4edda; border:1px solid #c3e6cb; color:#155724; }
+.alert-danger { background:#f8d7da; border:1px solid #f5c6cb; color:#721c24; }
+#new-source-name, #new-source-url { width:100%; box-sizing:border-box; }
+</style>
+
+<%+footer%> 

@@ -1,0 +1,71 @@
+#!/bin/sh /etc/rc.common
+# Copyright (c) 2025 Gxxkx
+
+START=99
+STOP=10
+USE_PROCD=1
+
+PROG=/usr/bin/hostupdater
+CONFIG=/etc/config/hostupdater
+
+start_service() {
+    # 读取配置
+    local enabled
+    local interval
+    
+    config_load hostupdater
+    config_get_bool enabled main enabled 0
+    config_get interval main interval "6"
+    
+    if [ "$enabled" -eq 1 ]; then
+        # 创建定时任务
+        local cron_job="0 */${interval} * * * ${PROG} update"
+        
+        # 添加到crontab
+        (crontab -l 2>/dev/null; echo "$cron_job") | crontab -
+        
+        # 立即执行一次更新
+        ${PROG} update
+        
+        procd_open_instance
+        procd_set_param command /bin/sh -c "while true; do sleep 3600; done"
+        procd_set_param respawn
+        procd_close_instance
+    fi
+}
+
+stop_service() {
+    # 从crontab中移除定时任务
+    crontab -l 2>/dev/null | grep -v "${PROG} update" | crontab -
+    
+    # 停止procd进程
+    procd_kill hostupdater
+}
+
+reload_service() {
+    stop
+    start
+}
+
+status() {
+    local enabled
+    config_load hostupdater
+    config_get_bool enabled main enabled 0
+    
+    if [ "$enabled" -eq 1 ]; then
+        echo "Host Updater 服务已启用"
+        echo "定时更新间隔: $(uci -q get hostupdater.main.interval || echo '6') 小时"
+        
+        # 检查crontab
+        if crontab -l 2>/dev/null | grep -q "${PROG} update"; then
+            echo "定时任务已配置"
+        else
+            echo "定时任务未配置"
+        fi
+    else
+        echo "Host Updater 服务已禁用"
+    fi
+    
+    # 显示状态
+    ${PROG} status
+} 
