@@ -1,0 +1,260 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: hostupdater\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 10:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:12
+msgid "Host Updater"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:16
+msgid "Basic Settings"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:17
+msgid "Manage multiple hosts subscription sources with scheduled and manual fetching"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:19
+msgid "Enable Service"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:22
+msgid "Enable automatic update service"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:25
+msgid "Update Interval"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:28
+msgid "1 hour"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:29
+msgid "2 hours"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:30
+msgid "3 hours"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:31
+msgid "6 hours"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:32
+msgid "12 hours"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:33
+msgid "24 hours"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:36
+msgid "Save Configuration"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:40
+msgid "Subscription Sources Management"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:41
+msgid "Add, delete, enable, disable subscription sources, support manual update for individual sources"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:43
+msgid "Source Name"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:44
+msgid "Name"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:46
+msgid "Source URL"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:47
+msgid "URL"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:50
+msgid "Add"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:52
+msgid "Loading..."
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:57
+msgid "Batch Operations"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:59
+msgid "Update All"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:60
+msgid "Restore Hosts"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:61
+msgid "Refresh Status"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:65
+msgid "Current /etc/hosts Content"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:67
+msgid "Refresh"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:69
+msgid "Click \"Refresh\" button to load current /etc/hosts"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:72
+msgid "Log Viewer"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:75
+msgid "View Log"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:76
+msgid "Clear Log"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:78
+msgid "Click \"View Log\" button to display logs"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:89
+msgid "Success"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:89
+msgid "Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:89
+msgid "Save Configuration Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "No subscription sources"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Status"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Operations"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Enabled"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Disabled"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Disable"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Update"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:91
+msgid "Delete"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:92
+msgid "Add Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:92
+msgid "Please fill in name and URL"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:92
+msgid "Add Subscription Source"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:93
+msgid "Toggle Status"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:93
+msgid "Toggle Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:94
+msgid "Single Source Update"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:94
+msgid "Completed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:94
+msgid "Single Source Update Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:95
+msgid "Confirm delete subscription source"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:95
+msgid "Delete Subscription Source"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:95
+msgid "Delete Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:96
+msgid "Update Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:96
+msgid "Confirm restore /etc/hosts to original backup"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:96
+msgid "Restore Completed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:96
+msgid "Restore Failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:97
+msgid "Load hosts failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:97
+msgid "View log failed"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:97
+msgid "Confirm clear log"
+msgstr ""
+
+#: luasrc/luci/view/admin/services/hostupdater.htm:97
+msgid "Clear log failed"
+msgstr ""

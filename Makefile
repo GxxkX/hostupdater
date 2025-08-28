@@ -68,6 +68,9 @@ define Package/$(PKG_NAME)/install
 	
 	$(INSTALL_DIR) $(1)/usr/share/luci/icons
 	$(INSTALL_DATA) ./files/usr/share/luci/icons/hostupdater.svg $(1)/usr/share/luci/icons/
+	
+	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
+	$(INSTALL_DATA) ./files/usr/lib/lua/luci/i18n/hostupdater.*.lmo $(1)/usr/lib/lua/luci/i18n/
 endef
 
 define Package/$(PKG_NAME)/postinst
