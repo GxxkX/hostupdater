@@ -2,6 +2,10 @@
 
 一个用于OpenWrt的hosts订阅源管理软件包，支持多个hosts源的定时抓取和手动更新。
 
+## 图片预览
+
+<img width="1912" height="954" alt="wechat_2025-08-28_113832_241" src="https://github.com/user-attachments/assets/a48455a0-960a-461d-b4ce-a61b3fe0772d" />
+
 ## 功能特性
 
 - 🔄 **多源管理**: 支持配置多个hosts订阅源
