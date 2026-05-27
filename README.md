@@ -52,7 +52,7 @@ opkg install hostupdater_1.0.0-1_all.ipk
 编辑 `/etc/hostupdater/sources.conf` 文件，格式如下：
 ```
 # 格式: 名称|URL|启用状态(1=启用,0=禁用)
-tinsfox|https://github-hosts.tinsfox.com/hosts|0
+gitcdn|https://hosts.gitcdn.top/hosts.txt|0
 tmdb_ipv4|https://raw.githubusercontent.com/cnwikee/CheckTMDB/refs/heads/main/Tmdb_host_ipv4|0
 tmdb_ipv6|https://raw.githubusercontent.com/cnwikee/CheckTMDB/refs/heads/main/Tmdb_host_ipv6|0
 ```

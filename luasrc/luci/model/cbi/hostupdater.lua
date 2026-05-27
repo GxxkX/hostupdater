@@ -50,8 +50,10 @@ o.inputtitle = translate("查看日志")
 o.inputstyle = "reload"
 o.write = function()
 	local data = luci.sys.exec("/usr/bin/tail -n 100 /var/log/hostupdater.log 2>/dev/null")
-	luci.template.render_string([[<%+header%><h2><%:Host Updater 日志%></h2><pre style="white-space:pre-wrap;word-break:break-all;">]] ..
-		luci.util.pcdata(data) .. "</pre>" .. [[<%+footer%>]])
+	local render_fn = luci.template.render_string or luci.template.render
+	local pcdata_fn = luci.util.pcdata or luci.util.striphtml or function(s) return s end
+	render_fn([[<%+header%><h2><%:Host Updater 日志%></h2><pre style="white-space:pre-wrap;word-break:break-all;">]] ..
+		pcdata_fn(data) .. "</pre>" .. [[<%+footer%>]])
 end
 
 o = s:option(Button, "clear_log", translate("清空日志"))

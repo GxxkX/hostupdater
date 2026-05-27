@@ -85,6 +85,7 @@ fi
 
 # Set permissions
 chmod 755 /usr/bin/hostupdater
+chmod 755 /etc/init.d/hostupdater
 chmod 644 /etc/config/hostupdater
 chmod 644 /etc/hostupdater/sources.conf
 
